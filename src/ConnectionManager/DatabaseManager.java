@@ -15,8 +15,8 @@ public class DatabaseManager {
     
     	String connString = dbURL + "System_DB_Test_Model";
     	  
-        String username = "temp";
-        String password = "temp"; 
+        String username = "root";
+        String password = "root"; 
         
         try 
         {
@@ -35,8 +35,8 @@ public class DatabaseManager {
      
     	String connString = dbURL + dbName;
     	 
-        String username = "temp";
-        String password = "temp";
+        String username = "root";
+        String password = "root";
         
         try 
         {
