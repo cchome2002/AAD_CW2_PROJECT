@@ -2,26 +2,25 @@ package ConnectionManager;
 
 import java.sql.*;
 
+import staticResources.Configuration;
+
 public class DatabaseManager {
 
 	 private static Connection conn = null;
      private static Statement statement = null;
      //private static PreparedStatement preparedStatement = null;
      private static ResultSet resultSet = null;
-     private static String driver = "com.mysql.jdbc.Driver";
-     private static String dbURL = "jdbc:mysql://127.0.0.1:3306/";
+     private static String driver = Configuration.MySQLdriver;
+     private static String dbURL = Configuration.MySQLConUrl;
 
      public static void getSystemConn () throws Exception{
     
     	String connString = dbURL + "System_DB_Test_Model";
     	  
-        String username = "root";
-        String password = "root"; 
-        
         try 
         {
         	Class.forName(driver).newInstance();
-		    conn  = DriverManager.getConnection(connString, username, password);
+		    conn  = DriverManager.getConnection(connString, Configuration.MySQLrootUser, Configuration.MySQLrootPassword);
         } 
         catch (Exception e) 
         {
@@ -34,14 +33,11 @@ public class DatabaseManager {
      public static void getCharityConn (String dbName) throws Exception{
      
     	String connString = dbURL + dbName;
-    	 
-        String username = "root";
-        String password = "root";
         
         try 
         {
         	Class.forName(driver).newInstance();
-		    conn  = DriverManager.getConnection(connString, username, password);
+		    conn  = DriverManager.getConnection(connString, Configuration.MySQLrootUser, Configuration.MySQLrootPassword);
 		    
         } 
         catch (Exception e) 
@@ -62,6 +58,27 @@ public class DatabaseManager {
              System.err.println("Got an exception! ");
              System.err.println(e.getMessage());
          }
+     }
+     
+     public static String Test()
+     {
+    	 String result = "";
+    	 try {
+    	 getCharityConn("Charity_Db_Test_Model");
+    	 statement = conn.createStatement();
+    	 
+    	 resultSet = statement.executeQuery("SELECT Username FROM Users");
+    	 
+			while(resultSet.next())
+			 {
+				result +=  resultSet.getString("Username");
+				 
+			 }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	 return result;
      }
      
      public static String readCharityDataV2() throws Exception {
