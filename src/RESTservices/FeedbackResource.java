@@ -18,13 +18,14 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 import ConnectionManager.DatabaseManager;
+import javax.ws.rs.POST;
 
 /**
  * REST Web Service
  *
  * @author cchen
  */
-@Path("feedbacks")
+@Path("/")
 public class FeedbackResource {
 
     @Context
@@ -40,6 +41,7 @@ public class FeedbackResource {
      * Retrieves representation of an instance of RESTservices.FeedbackResource
      * @return an instance of feedbackEntity
      */
+    @Path("/feedbacks")
     @GET
     @Produces("application/xml")
     public List<feedbackEntity> getFeedbacks() {
@@ -55,13 +57,38 @@ public class FeedbackResource {
         
     }
 
+    @Path("/feedbacks/{feedbackid}")
+    @GET
+    @Produces("application/xml")
+    public feedbackEntity getSingleFeedback(@PathParam("feedbackid") 
+    int feedbackid) throws Exception {
+        //TODO return proper representation object
+        feedbackEntity fd = new feedbackEntity();
+        try{
+            fd = DatabaseManager.readSingleFeedback(feedbackid);
+            addFeedback(fd);
+        }
+        catch (Exception e)
+        {
+            throw(e);
+        }
+        return fd;
+        
+    }
     /**
      * PUT method for updating or creating an instance of FeedbackResource
      * @param content representation for the resource
      * @return an HTTP response with content of the updated or created resource.
      */
-    @PUT
+    @POST
     @Consumes("application/xml")
-    public void putXml(feedbackEntity content) {
+    public void addFeedback(feedbackEntity fd) throws Exception {
+        try{
+            DatabaseManager.addFeedback(fd);
+        }
+        catch (Exception e)
+        {
+            throw(e);
+        }        
     }
 }

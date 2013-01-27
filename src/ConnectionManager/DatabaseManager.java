@@ -201,7 +201,7 @@ public class DatabaseManager {
     	 statement = conn.createStatement();
     	 resultSet = statement.executeQuery(
     			 "SELECT Feedback_Id, Name, Email, Comment, User_Id, Username, ReviewedDate, isReviewed, feedback.Timestamp " +
-    			 "FROM feedback, users where feedback.ReviewedBy = users.User_Id");
+    			 "FROM feedback left join users on feedback.ReviewedBy = users.User_Id");
     	 
     	 while(resultSet.next())
     	 {
@@ -218,9 +218,55 @@ public class DatabaseManager {
              fd.setTimestamp(resultSet.getDate("feedback.Timestamp"));
              fds.add(fd);
     	 }
-    	 
+    	 closeConn();
     	 return fds; 
      }     
+     
+     public static feedbackEntity readSingleFeedback(int feedbackid) throws Exception{
+    	 
+         feedbackEntity fd;
+         Users user;
+    	 getSystemConn();
+    	 statement = conn.createStatement();
+    	 resultSet = statement.executeQuery(
+    			 "SELECT Feedback_Id, Name, Email, Comment, User_Id, Username, ReviewedDate, isReviewed, feedback.Timestamp " +
+    			 "FROM feedback left join users on feedback.ReviewedBy = users.User_Id where feedback.Feedback_id = " + feedbackid);
+    	 
+    	 if(resultSet.next())
+    	 {
+             fd = new feedbackEntity(); 
+             user = new Users();
+             user.setUserId(resultSet.getInt("User_Id"));
+             user.setUsername(resultSet.getString("Username"));
+             fd.setReviewedBy(user);
+             fd.setFeedbackId(resultSet.getInt("Feedback_Id"));   
+             fd.setName(resultSet.getString("Name"));
+             fd.setEmail(resultSet.getString("Email"));
+             fd.setComment(resultSet.getString("Comment"));
+             fd.setReviewedDate(resultSet.getDate("ReviewedDate"));
+             fd.setTimestamp(resultSet.getDate("feedback.Timestamp"));
+    	 }
+    	 else
+         {
+             fd = null;
+         }
+         closeConn();
+    	 return fd; 
+     }          
+     
+     public static void addFeedback(feedbackEntity fd) throws Exception{
+
+    	 getSystemConn();
+         boolean addSuccess;
+    	 statement = conn.createStatement();
+    	 addSuccess = statement.execute(
+    			 "Insert feedback (Name, Email, Comment) values('" +
+                          fd.getName() + "','" + 
+                          fd.getEmail()+ "','" +
+                          fd.getComment() + "')");
+         closeConn();
+     }        
+     
 /*** CHEN CHEN 2013-01-27 END ***/
          
 }
