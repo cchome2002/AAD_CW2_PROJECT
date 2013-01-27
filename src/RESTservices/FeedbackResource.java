@@ -74,11 +74,13 @@ public class FeedbackResource {
         return fd;
         
     }
+        
     /**
-     * PUT method for updating or creating an instance of FeedbackResource
+     * POST method for Creating an instance of FeedbackResource
      * @param content representation for the resource
      * @return an HTTP response with content of the updated or created resource.
      */
+    @Path("/feedbacks")
     @POST
     @Consumes("application/xml")
     public void addFeedback(feedbackEntity fd) throws Exception {
