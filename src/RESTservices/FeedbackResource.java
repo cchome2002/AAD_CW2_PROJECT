@@ -66,7 +66,6 @@ public class FeedbackResource {
         feedbackEntity fd = new feedbackEntity();
         try{
             fd = DatabaseManager.readSingleFeedback(feedbackid);
-            addFeedback(fd);
         }
         catch (Exception e)
         {

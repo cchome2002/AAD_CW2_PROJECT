@@ -264,7 +264,7 @@ public class DatabaseManager {
                           fd.getName() + "','" + 
                           fd.getEmail()+ "','" +
                           fd.getComment() + "')");
-         closeConn();
+         closeConn(); 
      }        
      
 /*** CHEN CHEN 2013-01-27 END ***/
