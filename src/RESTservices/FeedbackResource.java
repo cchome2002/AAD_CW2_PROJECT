@@ -52,6 +52,7 @@ public class FeedbackResource {
         }
         catch (Exception e)
         {
+            fds = null;
         }
         return fds;
         
@@ -69,7 +70,7 @@ public class FeedbackResource {
         }
         catch (Exception e)
         {
-            throw(e);
+            fd = null;
         }
         return fd;
         
@@ -83,13 +84,14 @@ public class FeedbackResource {
     @Path("/feedbacks")
     @POST
     @Consumes("application/xml")
-    public void addFeedback(feedbackEntity fd) throws Exception {
+    public feedbackEntity addFeedback(feedbackEntity fd) throws Exception {
         try{
             DatabaseManager.addFeedback(fd);
         }
         catch (Exception e)
         {
-            throw(e);
-        }        
+            fd = null;
+        }       
+        return fd;
     }
 }
