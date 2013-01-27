@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import staticResources.Configuration;
+import RESTdataEntities.*;
 
 public class DatabaseManager {
 
@@ -189,5 +190,37 @@ public class DatabaseManager {
      	 
     	 return dataMap;
      }
+     
+/*** CHEN CHEN 2013-01-27 BEGIN ***/
+     public static List<feedbackEntity> readFeedbacks() throws Exception{
+    	 
+    	 List<feedbackEntity> fds = new ArrayList<feedbackEntity>();
+         feedbackEntity fd;
+         Users user;
+    	 getSystemConn();
+    	 statement = conn.createStatement();
+    	 resultSet = statement.executeQuery(
+    			 "SELECT Feedback_Id, Name, Email, Comment, User_Id, Username, ReviewedDate, isReviewed, feedback.Timestamp " +
+    			 "FROM feedback, users where feedback.ReviewedBy = users.User_Id");
+    	 
+    	 while(resultSet.next())
+    	 {
+             fd = new feedbackEntity(); 
+             user = new Users();
+             user.setUserId(resultSet.getInt("User_Id"));
+             user.setUsername(resultSet.getString("Username"));
+             fd.setReviewedBy(user);
+             fd.setFeedbackId(resultSet.getInt("Feedback_Id"));   
+             fd.setName(resultSet.getString("Name"));
+             fd.setEmail(resultSet.getString("Email"));
+             fd.setComment(resultSet.getString("Comment"));
+             fd.setReviewedDate(resultSet.getDate("ReviewedDate"));
+             fd.setTimestamp(resultSet.getDate("feedback.Timestamp"));
+             fds.add(fd);
+    	 }
+    	 
+    	 return fds; 
+     }     
+/*** CHEN CHEN 2013-01-27 END ***/
          
 }
